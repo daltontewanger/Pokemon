@@ -1,14 +1,25 @@
-const router = require('express').Router()
-const Pokemon = require('../models/Pokemon')
+const router = require("express").Router();
+const Pokemon = require("../models/Pokemon");
 
-router.get('/', async (req,res) => {
+router.get("/", async (req, res) => {
+  try {
+    const pokemon = await Pokemon.find();
+    res.json(pokemon);
+  } catch (error) {
+    console.log("Error fetching all pokemon", error);
+    res.status(500).json({ message: "Error fetching all pokemon" });
+  }
+});
+
+router.get("/:pokemonId", async (req, res) => {
     try {
-        const pokemon = await Pokemon.find()
+        const { pokemonId } = req.params
+        const pokemon = await Pokemon.find({ pokemonId })
         res.json(pokemon)
     } catch (error) {
-        console.log('Error fetching all pokemon', error)
-        res.status(500).json({ message: 'Error fetching all pokemon' })
+      console.log("Error fetching pokemon by ID", error);
+      res.status(500).json({ message: "Error fetching pokemon by ID" });
     }
-})
+  });
 
-module.exports = router
+module.exports = router;
